@@ -1,11 +1,13 @@
 #!/bin/bash
-declare -A map
-map["weather.dat"]='{ print $2-$3, $1; }'
-map["football.dat"]='{ print ($7>$9?$7-$9:$9-$7), $2; }'
+declare -A map # map data filenames to column number for awk code
+map["weather.dat"]='-v p=2 -v q=3 -v r=1'
+map["football.dat"]='-v p=7 -v q=9 -v r=2'
+
+awk_program='{ print abs($p - $q), $r; } function abs(val) { return val>0?val:-val; }'
 
 for key in ${!map[@]}
 do
-    cat $key | grep '^[[:space:]]*[[:digit:]]' |\
-        awk "${map[$key]}" |\
-        sort -n | head -n 1 | awk '{ print $2; }'
+    grep '^[[:space:]]*[[:digit:]]' $key |\
+        awk ${map[$key]} "$awk_program" |\
+        sort -n | head -n 1 | cut -d ' ' -f 2
 done
