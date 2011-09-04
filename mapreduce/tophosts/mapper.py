@@ -4,7 +4,11 @@
 import sys
 from urlparse import urlsplit
 
-for line in sys.stdin:
-    hostname = urlsplit(line.strip()).hostname
-    if hostname:
-        print '%s\t%s' % (hostname, 1)
+def main():
+    for s in (line.strip() for line in sys.stdin):
+        hostname = urlsplit(s).hostname
+        if hostname:
+            print '%s\t%s' % (hostname, 1)
+
+if __name__ == "__main__":
+    main()
