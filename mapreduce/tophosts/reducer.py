@@ -17,10 +17,7 @@ def rheapadd(heap, item):
 def main():
     data = (line.strip().split('\t', 1) for line in sys.stdin)
     for host, g in groupby(data, lambda p: p[0]):
-        s = 0
-        for h, count in g:
-            try: s += int(count)
-            except ValueError: continue
+        s = sum(int(count) for h, count in g if count.isdigit())
         rheapadd(heap, (s, host))
     for count, host in sorted(heap, reverse=True):
         print '%s\t%s' % (host, count)
