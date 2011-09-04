@@ -2,11 +2,8 @@
 """Get top k hosts"""
 
 import sys
+from itertools import groupby
 from heapq import heappush, heappushpop
-
-current_host = None
-current_count = 0
-host = None
 
 heap = []
 k = 5
@@ -17,23 +14,16 @@ def rheapadd(heap, item):
     else:
         heappush(heap, item)
 
-for line in sys.stdin:
-    host, count = line.strip().split('\t', 1)
+def main():
+    data = (line.strip().split('\t', 1) for line in sys.stdin)
+    for host, g in groupby(data, lambda p: p[0]):
+        s = 0
+        for h, count in g:
+            try: s += int(count)
+            except ValueError: continue
+        rheapadd(heap, (s, host))
+    for count, host in sorted(heap, reverse=True):
+        print '%s\t%s' % (host, count)
 
-    try:
-        count = int(count)
-    except ValueError:
-        continue
-    if current_host == host:
-        current_count += count
-    else:
-        if current_host:
-            rheapadd(heap, (current_count, current_host))
-        current_count = count
-        current_host = host
-
-if current_host == host:
-    rheapadd(heap, (current_count, current_host))
-
-for count, host in sorted(heap, reverse=True):
-    print '%s\t%s' % (host, count)
+if __name__ == "__main__":
+    main()
