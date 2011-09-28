@@ -1,6 +1,6 @@
 Motivation
 ====
-Extract top k hosts from list of urls using MapReduce (hadoop streaming).
+Extract top k (which is hardcoded at `reducer.py`) hosts from list of urls using MapReduce (hadoop streaming).
 
 Simple usage
 ===
